@@ -48,7 +48,7 @@ jobs:
           exit 1
 
       - name: Checkout server
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           # We need to checkout submodules for 3rdparty
@@ -56,7 +56,7 @@ jobs:
 
       - name: Check composer.json
         id: check_composer
-        uses: andstor/file-existence-action@076e0072799f4942c8bc574a82233e1e4d13e9d6 # v3.0.0
+        uses: andstor/file-existence-action@558493d6c74bf472d87c84eab196434afc2fa029 # v3.1.0
         with:
           files: "composer.json"
 
@@ -65,14 +65,14 @@ jobs:
         run: composer install --no-dev
 
       - name: Read package.json node and npm engines version
-        uses: skjnldsv/read-package-engines-version-actions@06d6baf7d8f41934ab630e97d9e6c0bc9c9ac5e4 # v3
+        uses: skjnldsv/read-package-engines-version-actions@06d6db44aa62f4609ba070f556ec24bc99fb85cb # v4
         id: versions
         with:
           fallbackNode: "^20"
           fallbackNpm: "^10"
 
       - name: Set up node ${{ steps.versions.outputs.nodeVersion }}
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ steps.versions.outputs.nodeVersion }}
 
@@ -163,7 +163,7 @@ jobs:
           path: ./
 
       - name: Set up node ${{ needs.init.outputs.nodeVersion }}
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ needs.init.outputs.nodeVersion }}
 
@@ -174,7 +174,7 @@ jobs:
         run: ./node_modules/cypress/bin/cypress install
 
       - name: Run ${{ matrix.containers == 'component' && 'component' || 'E2E' }} cypress tests
-        uses: cypress-io/github-action@b8ba51a856ba5f4c15cf39007636d4ab04f23e3c # v6.10.2
+        uses: cypress-io/github-action@0ed14f5d30c4ad6e5e8ffb6f57dbb69150137a3f # v7.4.10
         with:
           # We already installed the dependencies in the init job
           install: false
@@ -197,7 +197,7 @@ jobs:
           SETUP_TESTING: ${{ matrix.containers == 'setup' && 'true' || '' }}
 
       - name: Upload snapshots and videos
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: snapshots_videos_${{ matrix.containers }}
@@ -210,7 +210,7 @@ jobs:
         run: docker logs nextcloud-cypress-tests_${{ env.APP_NAME }} > nextcloud.log
 
       - name: Upload NC logs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure() && matrix.containers != 'component'
         with:
           name: nc_logs_${{ matrix.containers }}
@@ -221,7 +221,7 @@ jobs:
         run: docker exec nextcloud-cypress-tests_${{ env.APP_NAME }} tar -cvjf - data > data.tar
 
       - name: Upload data dir archive
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure() && matrix.containers != 'component'
         with:
           name: nc_data_${{ matrix.containers }}
