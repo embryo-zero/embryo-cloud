@@ -8,7 +8,7 @@
 		}
 	},
 	"require": {
-		"psalm/plugin-phpunit": "^0.19.7",
+		"psalm/plugin-phpunit": "^0.22.2",
 		"vimeo/psalm": "^6.20"
 	}
 }
